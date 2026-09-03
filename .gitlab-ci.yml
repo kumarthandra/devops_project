@@ -1,0 +1,11 @@
+stages:
+  - test
+
+unit_tests:
+  stage: test
+  image: python:3.9
+  script:
+    - pip install -r backend/requirements.txt
+    - pytest backend/tests/test_app.py -v
+
+    
