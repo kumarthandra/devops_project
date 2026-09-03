@@ -17,4 +17,4 @@ def test_health():
 
     assert data["status"] == "healthy"
     assert data["service"] == "claims-backend"
-    assert data["version"] == "1.0.1"
+    assert data["version"] == "9.9.9"
