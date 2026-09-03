@@ -25,6 +25,7 @@ def health():
     return jsonify({
         "status": "healthy",
         "service": "claims-backend"
+        "version": "1.0.1"
     })
 
 
