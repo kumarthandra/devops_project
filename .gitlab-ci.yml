@@ -1,11 +1,19 @@
 stages:
   - test
+  - quality
 
 unit_tests:
   stage: test
-  image: python:3.9
+  tags:
+    - macos
   script:
-    - pip install -r backend/requirements.txt
-    - pytest backend/tests/test_app.py -v
+    - python3 -m pip install -r backend/requirements.txt
+    - python3 -m pytest backend/tests/test_app.py -v
 
+sonarqube_check:
+  stage: quality
+  tags:
+    - macos
+  script:
+    - sonar-scanner -Dsonar.host.url="$SONAR_HOST_URL" -Dsonar.token="$SONAR_TOKEN"
     
