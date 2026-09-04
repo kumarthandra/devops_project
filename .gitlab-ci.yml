@@ -38,14 +38,15 @@ docker_build:
     - 'docker images "$CI_REGISTRY_IMAGE"'
 
 # 4. TRIVY SECURITY SCAN
+# 4. TRIVY SECURITY SCAN
 trivy_scan:
   stage: scan
   tags:
     - macos
   script:
-    - echo "Scanning Docker image: $IMAGE_NAME"
-    - trivy image --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 "$IMAGE_NAME"
-    - echo "Trivy scan completed successfully"
+    - 'echo "Scanning Docker image: $IMAGE_NAME"'
+    - 'trivy image --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 "$IMAGE_NAME"'
+    - 'echo "Trivy scan completed successfully"'
 
 # 5. PUBLISH IMAGE
 publish_image:
