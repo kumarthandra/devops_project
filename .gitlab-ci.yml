@@ -8,6 +8,9 @@ stages:
 variables:
   IMAGE_NAME: "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
 
+before_script:
+  - 'export PATH="$HOME/.docker/bin:/usr/local/bin:$PATH"'
+
 # 1. UNIT TESTS
 unit_tests:
   stage: test
