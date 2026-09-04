@@ -58,4 +58,4 @@ publish_image:
     - 'docker push "$IMAGE_NAME"'
     - 'echo "Docker image published successfully"'
   rules:
-    - 'if: $CI_COMMIT_BRANCH == "feature/usecase1"'
+    - if: '$CI_COMMIT_BRANCH == "feature/usecase1"'
