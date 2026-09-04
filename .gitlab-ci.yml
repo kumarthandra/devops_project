@@ -14,8 +14,8 @@ unit_tests:
   tags:
     - macos
   script:
-    - python3 -m pip install -r backend/requirements.txt
-    - python3 -m pytest backend/tests/test_app.py -v
+    - 'python3 -m pip install -r backend/requirements.txt'
+    - 'python3 -m pytest backend/tests/test_app.py -v'
 
 # 2. SONARQUBE QUALITY CHECK
 sonarqube_check:
@@ -23,9 +23,8 @@ sonarqube_check:
   tags:
     - macos
   script:
-    - sonar-scanner -Dsonar.host.url="$SONAR_HOST_URL" -Dsonar.token="$SONAR_TOKEN"
+    - 'sonar-scanner -Dsonar.host.url="$SONAR_HOST_URL" -Dsonar.token="$SONAR_TOKEN"'
 
-# 3. DOCKER BUILD
 # 3. DOCKER BUILD
 docker_build:
   stage: build
@@ -37,7 +36,6 @@ docker_build:
     - 'echo "Docker image built successfully"'
     - 'docker images "$CI_REGISTRY_IMAGE"'
 
-# 4. TRIVY SECURITY SCAN
 # 4. TRIVY SECURITY SCAN
 trivy_scan:
   stage: scan
@@ -54,10 +52,10 @@ publish_image:
   tags:
     - macos
   script:
-    - echo "Logging in to GitLab Container Registry"
-    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
-    - echo "Publishing Docker image: $IMAGE_NAME"
-    - docker push "$IMAGE_NAME"
-    - echo "Docker image published successfully"
+    - 'echo "Logging in to GitLab Container Registry"'
+    - 'echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin'
+    - 'echo "Publishing Docker image: $IMAGE_NAME"'
+    - 'docker push "$IMAGE_NAME"'
+    - 'echo "Docker image published successfully"'
   rules:
-    - if: '$CI_COMMIT_BRANCH == "feature/usecase1"'
+    - 'if: $CI_COMMIT_BRANCH == "feature/usecase1"'
