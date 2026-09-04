@@ -26,15 +26,16 @@ sonarqube_check:
     - sonar-scanner -Dsonar.host.url="$SONAR_HOST_URL" -Dsonar.token="$SONAR_TOKEN"
 
 # 3. DOCKER BUILD
+# 3. DOCKER BUILD
 docker_build:
   stage: build
   tags:
     - macos
   script:
-    - echo "Building Docker image: $IMAGE_NAME"
-    - docker build --pull -t "$IMAGE_NAME" ./backend
-    - echo "Docker image built successfully"
-    - docker images "$CI_REGISTRY_IMAGE"
+    - 'echo "Building Docker image: $IMAGE_NAME"'
+    - 'docker build --pull -t "$IMAGE_NAME" ./backend'
+    - 'echo "Docker image built successfully"'
+    - 'docker images "$CI_REGISTRY_IMAGE"'
 
 # 4. TRIVY SECURITY SCAN
 trivy_scan:
