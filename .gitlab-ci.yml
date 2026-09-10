@@ -4,6 +4,7 @@ stages:
   - build
   - scan
   - publish
+  - approval
 
 variables:
   IMAGE_NAME: "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
@@ -60,5 +61,16 @@ publish_image:
     - 'echo "Publishing Docker image: $IMAGE_NAME"'
     - 'docker push "$IMAGE_NAME"'
     - 'echo "Docker image published successfully"'
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "feature/usecase1"'
+
+#approval
+manual_approval:
+  stage: approval
+  tags:
+    - macos
+  script:
+    - 'echo "Release approved for production-like environment"'
+  when: manual
   rules:
     - if: '$CI_COMMIT_BRANCH == "feature/usecase1"'
