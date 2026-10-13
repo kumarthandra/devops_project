@@ -1,0 +1,48 @@
+---
+- name: Use Case 7 - Automate server operations with Ansible and Vault
+  hosts: lab
+  gather_facts: false
+
+  tasks:
+    # Task 1: Create application configuration directory
+    - name: Create application configuration directory
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/lab-config"
+        state: directory
+        mode: '0755'
+
+    # Task 2: Create application configuration file
+    - name: Create application configuration file
+      ansible.builtin.copy:
+        dest: "{{ playbook_dir }}/lab-config/app.conf"
+        content: |
+          APP_NAME=claims-management
+          ENVIRONMENT=development
+          LOG_LEVEL=INFO
+        mode: '0644'
+
+    # Task 3: Retrieve application password from HashiCorp Vault
+    - name: Read application secret from Vault securely
+      ansible.builtin.command:
+        argv:
+          - docker
+          - exec
+          - -e
+          - VAULT_ADDR=http://127.0.0.1:8200
+          - -e
+          - VAULT_TOKEN=dev-only-token
+          - vault-lab
+          - vault
+          - kv
+          - get
+          - -field=password
+          - secret/midhlab/app
+      register: vault_secret
+      changed_when: false
+      no_log: true
+
+    # Task 4: Confirm successful secret retrieval without exposing it
+    - name: Confirm Vault secret was retrieved
+      ansible.builtin.debug:
+        msg: "Vault secret retrieved successfully (value masked)"
+      when: vault_secret.rc == 0
