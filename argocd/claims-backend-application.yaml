@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: claims-backend-uc5
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/kumarthandra/devops_project.git
+    targetRevision: feature/usecase5
+    path: claims-backend-chart
+    helm:
+      releaseName: claims-backend-argocd
+      valueFiles:
+        - values-dev.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: uc5
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
