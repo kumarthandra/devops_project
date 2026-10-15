@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uc8-alloy
+  namespace: uc4
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uc8-alloy
+  template:
+    metadata:
+      labels:
+        app: uc8-alloy
+    spec:
+      serviceAccountName: alloy
+      containers:
+        - name: alloy
+          image: grafana/alloy:v1.10.2
+          args:
+            - run
+            - /etc/alloy/config.alloy
+          ports:
+            - containerPort: 12345
+          volumeMounts:
+            - name: alloy-config
+              mountPath: /etc/alloy
+              readOnly: true
+      volumes:
+        - name: alloy-config
+          configMap:
+            name: uc8-alloy-config

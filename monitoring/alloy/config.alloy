@@ -1,0 +1,40 @@
+discovery.kubernetes "pods" {
+  role = "pod"
+}
+
+discovery.relabel "claims_backend" {
+  targets = discovery.kubernetes.pods.targets
+
+  rule {
+    source_labels = ["__meta_kubernetes_namespace"]
+    regex         = "uc4"
+    action        = "keep"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_pod_label_app"]
+    regex         = "claims-backend-uc8"
+    action        = "keep"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_pod_name"]
+    target_label  = "pod"
+  }
+
+  rule {
+    target_label = "job"
+    replacement  = "claims-backend-uc8"
+  }
+}
+
+loki.source.kubernetes "claims_logs" {
+  targets    = discovery.relabel.claims_backend.output
+  forward_to = [loki.write.local.receiver]
+}
+
+loki.write "local" {
+  endpoint {
+    url = "http://host.docker.internal:3100/loki/api/v1/push"
+  }
+}
