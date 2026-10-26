@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: policy-demo
+  namespace: usecase13
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: policy-demo
+  template:
+    metadata:
+      labels:
+        app: policy-demo
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
