@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green-deployment
+  namespace: usecase14
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bluegreen-demo
+      version: green
+  template:
+    metadata:
+      labels:
+        app: bluegreen-demo
+        version: green
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
