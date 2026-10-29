@@ -1,0 +1,17 @@
+# Staging environment configuration
+
+replicaCount: 2
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+podLabels:
+  environment: stage
+
+database:
+  secretName: claims-db-stage

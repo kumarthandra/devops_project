@@ -1,0 +1,35 @@
+# Common configuration for all environments
+
+image:
+  repository: claims-backend
+  tag: uc15-v1
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+service:
+  type: ClusterIP
+  port: 5000
+
+serviceAccount:
+  create: true
+  automount: false
+
+livenessProbe:
+  httpGet:
+    path: /api/health
+    port: http
+
+readinessProbe:
+  httpGet:
+    path: /api/health
+    port: http
+
+autoscaling:
+  enabled: false
+
+ingress:
+  enabled: false
+
+httpRoute:
+  enabled: false
