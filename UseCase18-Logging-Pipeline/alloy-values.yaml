@@ -1,0 +1,60 @@
+controller:
+  type: deployment
+  replicas: 1
+
+rbac:
+  create: true
+  namespaces:
+    - usecase18
+  rules:
+    - apiGroups: [""]
+      resources: ["pods", "pods/log"]
+      verbs: ["get", "list", "watch"]
+
+alloy:
+  configMap:
+    create: true
+    content: |
+      discovery.kubernetes "uc18_pods" {
+        role = "pod"
+
+        namespaces {
+          names = ["usecase18"]
+        }
+      }
+
+      discovery.relabel "uc18_app" {
+        targets = discovery.kubernetes.uc18_pods.targets
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_app"]
+          regex         = "uc18-log-app"
+          action        = "keep"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_namespace"]
+          target_label  = "namespace"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_name"]
+          target_label  = "pod"
+        }
+
+        rule {
+          target_label = "service"
+          replacement  = "uc18-demo"
+        }
+      }
+
+      loki.source.kubernetes "uc18_logs" {
+        targets    = discovery.relabel.uc18_app.output
+        forward_to = [loki.write.uc18_loki.receiver]
+      }
+
+      loki.write "uc18_loki" {
+        endpoint {
+          url = "http://uc18-loki.usecase18.svc.cluster.local:3100/loki/api/v1/push"
+        }
+      }
