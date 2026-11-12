@@ -1,0 +1,19 @@
+groups:
+  - name: uc19-slo-alerts
+    rules:
+      - alert: UC19HighErrorRate
+        expr: |
+          (
+            sum(increase(uc19_http_requests_total{status="failure"}[5m]))
+            /
+            sum(increase(uc19_http_requests_total[5m]))
+          ) > 0.01
+          and
+          sum(increase(uc19_http_requests_total[5m])) > 0
+        for: 1m
+        labels:
+          severity: warning
+          service: uc19-slo-app
+        annotations:
+          summary: "Use Case 19 SLO violation"
+          description: "The application error rate exceeded the 1% error budget threshold."

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: uc19-slo-app
+  name: uc19-slo-app
+  namespace: usecase19
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uc19-slo-app
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: uc19-slo-app
+    spec:
+      containers:
+      - image: uc19-slo-app:local
+        imagePullPolicy: Never
+        name: uc19-slo-app
+        resources: {}
+status: {}

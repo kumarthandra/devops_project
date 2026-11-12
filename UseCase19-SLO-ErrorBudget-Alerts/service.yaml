@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: uc19-slo-app
+  name: uc19-slo-service
+  namespace: usecase19
+spec:
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: uc19-slo-app
+  type: ClusterIP
+status:
+  loadBalancer: {}

@@ -1,0 +1,41 @@
+server:
+  persistentVolume:
+    enabled: false
+
+extraScrapeConfigs: |
+  - job_name: 'uc19-slo-app'
+    scrape_interval: 15s
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - 'uc19-slo-service.usecase19.svc.cluster.local:5000'
+
+alertmanager:
+  enabled: true
+  persistence:
+    enabled: false
+
+serverFiles:
+  alerting_rules.yml:
+    groups:
+      - name: uc19-slo-alerts
+        rules:
+          - alert: UC19HighErrorRate
+            expr: |
+              (
+                sum(increase(uc19_http_requests_total{status="failure"}[5m]))
+                /
+                sum(increase(uc19_http_requests_total[5m]))
+              ) > 0.01
+              and
+              sum(increase(uc19_http_requests_total[5m])) > 0
+            for: 1m
+            labels:
+              severity: warning
+              service: uc19-slo-app
+            annotations:
+              summary: "Use Case 19 SLO violation"
+              description: "Application error rate exceeded the 1% threshold."
+
+prometheus-node-exporter:
+  enabled: false
